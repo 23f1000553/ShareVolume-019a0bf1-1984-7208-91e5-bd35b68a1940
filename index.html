@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+</head>
+<body>
+    <h1 id="share-entity-name"></h1>
+    <p>Max:</p>
+    <p>Value: <span id="share-max-value"></span></p>
+    <p>FY: <span id="share-max-fy"></span></p>
+    <p>Min:</p>
+    <p>Value: <span id="share-min-value"></span></p>
+    <p>FY: <span id="share-min-fy"></span></p>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const cik = urlParams.get('CIK') || '0001086222';
+        fetch(`https://data.sec.gov/api/xbrl/companyconcept/CIK${cik}/dei/EntityCommonStockSharesOutstanding.json`, { headers: { 'User-Agent': 'My User Agent' }})
+            .then(response => response.json())
+            .then(data => {
+                document.title = data.entityName;
+                document.getElementById('share-entity-name').textContent = data.entityName;
+                document.getElementById('share-max-value').textContent = data.max.val;
+                document.getElementById('share-max-fy').textContent = data.max.fy;
+                document.getElementById('share-min-value').textContent = data.min.val;
+                document.getElementById('share-min-fy').textContent = data.min.fy;
+            })
+            .catch(error => console.error('Error:', error));
+    </script>
+</body>
+</html>
